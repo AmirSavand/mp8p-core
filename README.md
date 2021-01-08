@@ -14,7 +14,6 @@ Back-end repository of mp8p.
 Here's what the project is built with:
 
 - [Python](https://www.python.org/)
-- [Django](https://www.djangoproject.com/)
 - [Flask](https://palletsprojects.com/p/flask/)
 - [Pusher](https://pusher.com)
 - [PyCharm](https://www.jetbrains.com/pycharm/)
