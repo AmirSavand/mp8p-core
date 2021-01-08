@@ -1,22 +1,20 @@
-# mp8p
+# mp8p (Core)
 
-Back-end repository of Multiplayer 8 Puzzle.
+Back-end repository of mp8p.
 
-```
-Welcome to the very first version of mp8p by Amir Savand.
-Block format is INDEX-POSITION. Enter position number to move the blocks.
-Board:
-0-0	1-1	2-2	
-3-3	4-4	5-5	
-6-6	 	7-8	
-Which block do you want to move? 8
-The puzzle is solved!
-```
+## Development
 
-## Requirements
+- Create an environment with Python 3.8
+- Setup environment variables as well
+- Install pip packages: `pip install -r requirements-base.txt`
+- Run the server `flask run`
 
-- Python 3
+## Technologies
 
-## How to play
+Here's what the project is built with:
 
-Run `python main.py`.
+- [Python](https://www.python.org/)
+- [Django](https://www.djangoproject.com/)
+- [Flask](https://palletsprojects.com/p/flask/)
+- [Pusher](https://pusher.com)
+- [PyCharm](https://www.jetbrains.com/pycharm/)
