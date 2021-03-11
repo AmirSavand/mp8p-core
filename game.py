@@ -14,7 +14,7 @@ class Block:
     placed currently inside the board.
     """
 
-    def __init__(self, index: int, position: int, is_space: bool):
+    def __init__(self, index: int, position: int, is_space: bool) -> None:
         self.index = index
         self.position = position
         self.is_space = is_space
@@ -60,21 +60,25 @@ class Board(Storage):
         [5, 7],
     ]
 
-    @staticmethod
-    def generate_blocks() -> List["Block"]:
-        output: List[Block] = []
-        for index in range(8):
-            output.append(Block(index, 0, False))
-        output.append(Block(8, 0, True))
-        shuffle(output)
-        for block in output:
-            block.position = output.index(block)
-        return output
-
-    def __init__(self, match: "Match") -> None:
+    def __init__(self) -> None:
         super().__init__()
-        self.blocks: List[Block] = self.generate_blocks()
-        self.match = match
+        self.blocks: List[Block] = []
+        self.regenerate_blocks()
+
+    @property
+    def is_solvable(self) -> bool:
+        tiles: List[int] = []
+        for block in self.blocks:
+            tile = block.index + 1
+            if block.is_space:
+                tile = 0
+            tiles.append(tile)
+        count = 0
+        for i in range(8):
+            for j in range(i + 1, 9):
+                if tiles[j] and tiles[i] and tiles[i] > tiles[j]:
+                    count += 1
+        return count % 2 == 0
 
     @property
     def is_solved(self) -> bool:
@@ -89,22 +93,34 @@ class Board(Storage):
             if block.is_space:
                 return block
 
+    def regenerate_blocks(self) -> None:
+        self.blocks = []
+        for index in range(8):
+            self.blocks.append(Block(index, index, False))
+        self.blocks.append(Block(8, 0, True))
+        shuffle(self.blocks)
+        for block in self.blocks:
+            block.position = self.blocks.index(block)
+        # If board is unsolvable or solved regenerate it again
+        if not self.is_solvable or self.is_solved:
+            self.regenerate_blocks()
+
     def get_block_at_position(self, position: int) -> Optional[Block]:
         for block in self.blocks:
             if block.position == position:
                 return block
 
     def draw(self) -> None:
-        output: str = "Board:"
+        output: str = "Board"
         i: int = 0
         for y in range(3):
             output += "\n"
             for x in range(3):
                 block = self.get_block_at_position(i)
                 if not block.is_space:
-                    output += f"{block.index}-{block.position}\t"
+                    output += f"{block.index + 1} "
                 else:
-                    output += f" \t"
+                    output += f"  "
                 i += 1
         print(output)
 
@@ -122,6 +138,10 @@ class Board(Storage):
         space_block.position = block.position
         block.position = to_position
         return True
+
+    def solve(self) -> None:
+        for block in self.blocks:
+            block.position = block.index
 
     def export(self) -> dict:
         blocks: List[dict] = []
@@ -226,7 +246,7 @@ class Match(Storage):
             return False
         # Add the player to this match.
         self.players.append(player)
-        self.boards.append(Board(self))
+        self.boards.append(Board())
         # Set players match
         player.match = self
         # Now if match is full, start it.

@@ -3,6 +3,7 @@ from typing import Optional, cast
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 
+import version
 from basement import get_uuid, ErrorResponse
 from game import Player, Match, Board, Block
 from websocket import pusher
@@ -10,8 +11,6 @@ from websocket import pusher
 app: Flask = Flask(__name__)
 
 CORS(app=app)
-
-COUNT = 0
 
 
 def get_player_from_request() -> Optional[Player]:
@@ -25,9 +24,7 @@ def get_player_from_request() -> Optional[Player]:
 
 @app.route("/")
 def index():
-    global COUNT
-    COUNT += 1
-    return jsonify({"version": COUNT}), 200
+    return jsonify({"version": version.__version__}), 200
 
 
 @app.route("/register/", methods=["POST"])
